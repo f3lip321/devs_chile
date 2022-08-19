@@ -19,7 +19,7 @@ router.get('/', async function (req, res, next) {
           answers: []
         }
 
-        for (key in answer) {
+        for (const key in answer) {
           if (metadataKeys.includes(key)) {
             newAnswer = {
               [key]: answer[key],
