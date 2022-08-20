@@ -1,17 +1,16 @@
-var express = require('express');
+const express = require('express')
 const axios = require('axios')
-var router = express.Router();
+const router = express.Router()
 
 /* GET users listing. */
-router.get('/', async function(req, res, next) {
-
+router.get('/', async function (req, res, next) {
   try {
-    const response = await axios.get("https://sueldos-tech-chile-2022.herokuapp.com/v2/answers")
+    const response = await axios.get('https://sueldos-tech-chile-2022.herokuapp.com/v2/answers')
     const answers = response.data
     const metadataKeys = [
-      "Submission ID",
-    "Respondent ID",
-    "Submitted at"
+      'Submission ID',
+      'Respondent ID',
+      'Submitted at'
     ]
 
     const newResponse = answers
@@ -20,29 +19,27 @@ router.get('/', async function(req, res, next) {
           answers: []
         }
 
-        for(key in answer){
-          if (metadataKeys.includes(key)){
-            newAnswer = {              
+        for (const key in answer) {
+          if (metadataKeys.includes(key)) {
+            newAnswer = {
               [key]: answer[key],
               ...newAnswer
             }
+          } else {
+            newAnswer.answers.push({
+              question: key,
+              answer: answer[key]
+            })
           }
-            else{
-              newAnswer.answers.push({
-                question: key,
-                answer: answer[key]
-              })
-            }
-          } 
-          
-          return newAnswer
+        }
+
+        return newAnswer
       })
-    
-    res.send(newResponse);  
+
+    res.send(newResponse)
   } catch (error) {
     res.send(error.message)
   }
-  
-});
+})
 
-module.exports = router;
+module.exports = router
